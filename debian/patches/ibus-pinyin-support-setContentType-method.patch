@@ -1,0 +1,182 @@
+From 97565d04e40634a1ab62790f718a8377754d2954 Mon Sep 17 00:00:00 2001
+From: Peng Wu <alexepico@gmail.com>
+Date: Wed, 19 Feb 2014 10:57:40 -0500
+Subject: [PATCH 1/1] support setContentType method
+
+ibus now supports setContentType method, if an application input some
+password, the password will not be shown.
+
+BUG=rhbz#1027029
+R=Shawn.P.Huang@gmail.com
+
+Review URL: https://codereview.appspot.com/22330043
+
+Patch from Peng Wu <alexepico@gmail.com>.
+---
+ src/PYBopomofoEngine.cc |  5 +++++
+ src/PYEngine.cc         | 54 +++++++++++++++++++++++++++++++++++++++++++++++++
+ src/PYEngine.h          | 14 +++++++++++--
+ src/PYPinyinEngine.cc   |  5 +++++
+ 4 files changed, 76 insertions(+), 2 deletions(-)
+
+--- a/src/PYBopomofoEngine.cc
++++ b/src/PYBopomofoEngine.cc
+@@ -72,6 +72,9 @@
+ {
+     gboolean retval = FALSE;
+ 
++    if (contentIsPassword())
++        return retval;
++
+     /* check Shift + Release hotkey,
+      * and then ignore other Release key event */
+     if (modifiers & IBUS_RELEASE_MASK) {
+@@ -139,6 +142,8 @@
+ void
+ BopomofoEngine::focusOut (void)
+ {
++    Engine::focusOut();
++
+     reset ();
+ }
+ 
+--- a/src/PYEngine.cc
++++ b/src/PYEngine.cc
+@@ -67,6 +67,12 @@
+                                                  guint                   modifiers);
+ static void     ibus_pinyin_engine_focus_in     (IBusEngine             *engine);
+ static void     ibus_pinyin_engine_focus_out    (IBusEngine             *engine);
++#if IBUS_CHECK_VERSION (1, 5, 4)
++static void     ibus_pinyin_engine_set_content_type
++                                                (IBusEngine     *engine,
++                                                 guint           purpose,
++                                                 guint           hints);
++#endif
+ static void     ibus_pinyin_engine_reset        (IBusEngine             *engine);
+ static void     ibus_pinyin_engine_enable       (IBusEngine             *engine);
+ static void     ibus_pinyin_engine_disable      (IBusEngine             *engine);
+@@ -123,6 +129,10 @@
+     engine_class->focus_in = ibus_pinyin_engine_focus_in;
+     engine_class->focus_out = ibus_pinyin_engine_focus_out;
+ 
++#if IBUS_CHECK_VERSION (1, 5, 4)
++    engine_class->set_content_type = ibus_pinyin_engine_set_content_type;
++#endif
++
+     engine_class->page_up = ibus_pinyin_engine_page_up;
+     engine_class->page_down = ibus_pinyin_engine_page_down;
+ 
+@@ -182,6 +192,17 @@
+     return pinyin->engine->processKeyEvent (keyval, keycode, modifiers);
+ }
+ 
++#if IBUS_CHECK_VERSION (1, 5, 4)
++static void
++ibus_pinyin_engine_set_content_type (IBusEngine     *engine,
++                                     guint purpose,
++                                     guint hints)
++{
++    IBusPinyinEngine *pinyin = (IBusPinyinEngine *) engine;
++    return pinyin->engine->setContentType (purpose, hints);
++}
++#endif
++
+ static void
+ ibus_pinyin_engine_property_activate (IBusEngine    *engine,
+                                       const gchar   *prop_name,
+@@ -220,6 +241,39 @@
+ FUNCTION(cursor_down, cursorDown)
+ #undef FUNCTION
+ 
++Engine::Engine (IBusEngine *engine) : m_engine (engine)
++{
++#if IBUS_CHECK_VERSION (1, 5, 4)
++    m_input_purpose = IBUS_INPUT_PURPOSE_FREE_FORM;
++#endif
++}
++
++gboolean
++Engine::contentIsPassword()
++{
++#if IBUS_CHECK_VERSION (1, 5, 4)
++   return IBUS_INPUT_PURPOSE_PASSWORD == m_input_purpose;
++#else
++   return false;
++#endif
++}
++
++void
++Engine::focusOut (void)
++{
++#if IBUS_CHECK_VERSION (1, 5, 4)
++    m_input_purpose = IBUS_INPUT_PURPOSE_FREE_FORM;
++#endif
++}
++
++#if IBUS_CHECK_VERSION(1, 5, 4)
++void
++Engine::setContentType (guint purpose, guint hints)
++{
++    m_input_purpose = (IBusInputPurpose) purpose;
++}
++#endif
++
+ Engine::~Engine (void)
+ {
+ }
+--- a/src/PYEngine.h
++++ b/src/PYEngine.h
+@@ -37,13 +37,18 @@
+ 
+ class Engine {
+ public:
+-    Engine (IBusEngine *engine) : m_engine (engine) { }
++    Engine (IBusEngine *engine);
+     virtual ~Engine (void);
+ 
++    gboolean contentIsPassword();
++
+     // virtual functions
+     virtual gboolean processKeyEvent (guint keyval, guint keycode, guint modifiers) = 0;
+     virtual void focusIn (void) = 0;
+-    virtual void focusOut (void) = 0;
++    virtual void focusOut (void);
++#if IBUS_CHECK_VERSION (1, 5, 4)
++    virtual void setContentType (guint purpose, guint hints);
++#endif
+     virtual void reset (void) = 0;
+     virtual void enable (void) = 0;
+     virtual void disable (void) = 0;
+@@ -122,6 +127,11 @@
+ 
+ protected:
+     Pointer<IBusEngine>  m_engine;      // engine pointer
++
++#if IBUS_CHECK_VERSION (1, 5, 4)
++    IBusInputPurpose m_input_purpose;
++#endif
++
+ };
+ 
+ };
+--- a/src/PYPinyinEngine.cc
++++ b/src/PYPinyinEngine.cc
+@@ -82,6 +82,9 @@
+ {
+     gboolean retval = FALSE;
+ 
++    if (contentIsPassword())
++        return retval;
++
+     /* check Shift + Release hotkey,
+      * and then ignore other Release key event */
+     if (modifiers & IBUS_RELEASE_MASK) {
+@@ -195,6 +198,8 @@
+ void
+ PinyinEngine::focusOut (void)
+ {
++    Engine::focusOut ();
++
+     reset ();
+ }
+ 

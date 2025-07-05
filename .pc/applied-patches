@@ -1,0 +1,7 @@
+ibus-pinyin-fixes-lua-compile.patch
+ibus-pinyin-support-setContentType-method.patch
+ibus-pinyin-default-full.patch
+python3.patch
+lua-5.4.patch
+Fix-removed-python-gettext-API.patch
+Specify-Gtk-version.patch

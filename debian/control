@@ -1,0 +1,45 @@
+Source: ibus-pinyin
+Section: utils
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian Input Method Team <debian-input-method@lists.debian.org>
+Uploaders: Aron Xu <aron@debian.org>,
+           Osamu Aoki <osamu@debian.org>
+Build-Depends: debhelper (>= 11),
+               dh-lua,
+               dh-python,
+               intltool (>= 0.35.0),
+               libibus-1.0-dev (>= 1.5),
+               libopencc-dev (>= 0.1.0),
+               libpyzy-dev,
+               libsqlite3-dev (>= 3.6),
+               pkg-config,
+               python3-dev,
+               sqlite3,
+               uuid-dev
+Standards-Version: 4.2.1
+Homepage: https://github.com/ibus/ibus/wiki
+Vcs-Git: https://salsa.debian.org/input-method-team/ibus-pinyin.git
+Vcs-Browser: https://salsa.debian.org/input-method-team/ibus-pinyin
+
+Package: ibus-pinyin
+Architecture: any
+Multi-Arch: foreign
+Depends: gir1.2-gtk-3.0,
+         gir1.2-ibus-1.0,
+         python3-gi,
+         python3-xdg,
+         ${misc:Depends},
+         ${python3:Depends},
+         ${shlibs:Depends}
+Description: Pinyin engine for IBus
+ ibus-pinyin is a IBus based IM engine for Chinese.
+ .
+ For more information on pinyin input method, please check
+ http://en.wikipedia.org/wiki/Pinyin_method
+ .
+ This package contains pinyin input method.
+ .
+ This pinyin input method is deprecated; new users should
+ switch to ibus-libpinyin, which is a contemporary implementation
+ of pinyin input method.

@@ -1,0 +1,8 @@
+ibus-pinyin (1.5.0-5) unstable; urgency=medium
+
+    Package ibus-pinyin is now deprecated; its upstream has stopped development
+    for years in favour of new ibus-libpinyin. New ibus users should install
+    ibus-libpinyin instead of this package. This package (ibus-pinyin) will be
+    removed after Debian Buster (Debian 10) release.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 18 Sep 2018 16:53:42 -0400

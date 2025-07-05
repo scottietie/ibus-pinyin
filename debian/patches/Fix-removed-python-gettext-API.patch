@@ -1,0 +1,29 @@
+From: znwu <znjameswu@gmail.com>
+Date: Sun, 7 May 2023 18:17:11 -0700
+Subject: Fix removed python gettext API
+
+Origin: https://github.com/ibus/ibus-pinyin/commit/e2e10c40
+Bug-Debian: https://bugs.debian.org/1036197
+Bug-Ubuntu: https://launchpad.net/bugs/2019921
+---
+ setup/main.py | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/setup/main.py b/setup/main.py
+index 3c13c4c..3f153a5 100644
+--- a/setup/main.py
++++ b/setup/main.py
+@@ -45,7 +45,12 @@ def __init__(self, engine):
+         locale.setlocale(locale.LC_ALL, "")
+         localedir = os.getenv("IBUS_LOCALEDIR")
+         gettext.bindtextdomain("ibus-pinyin", localedir)
+-        gettext.bind_textdomain_codeset("ibus-pinyin", "UTF-8")
++        # Python's gettext module doesn't provide all methods in
++        # new Python version since Python 3.10
++        try:
++            gettext.bind_textdomain_codeset("ibus-pinyin", "UTF-8")
++        except AttributeError:
++            pass
+ 
+         self.__bus = IBus.Bus()
+         self.__config = self.__bus.get_config()

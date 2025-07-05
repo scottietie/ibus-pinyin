@@ -1,0 +1,93 @@
+Description: Enable using Python 3 in ibus-setup-pinyin
+Origin: https://github.com/ibus/ibus-pinyin/pull/5
+
+commit 277959a86b970d41fc74a63c44480e379fdda328
+Author: Petr Viktorin <pviktori@redhat.com>
+Date:   Thu Jan 29 16:25:40 2015 +0100
+
+    Enable using Python 3 in ibus-setup-pinyin
+    
+    The default uses 'python' and if the path of python 3 is 'python3', use:
+        ./configure --with-python=python3
+
+diff --git a/configure.ac b/configure.ac
+index b95fa7d..4ab5fb5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -81,6 +81,13 @@ LIBS="$save_LIBS"
+ AC_PATH_PROG(ENV, env)
+ AC_SUBST(ENV)
+ 
++# Define python version
++AC_ARG_WITH(python,
++    AS_HELP_STRING([--with-python[=PATH]],
++        [Select python2 or python3]),
++    [PYTHON=$with_python], []
++)
++
+ # check python
+ AM_PATH_PYTHON([2.5])
+ 
+@@ -166,6 +173,7 @@ Build options:
+     Version                     $VERSION
+     Install prefix              $prefix
+     Use boost                   $enable_boost
++    python                      $PYTHON
+     Build lua extension         $enable_lua_extension
+     Build english input mode    $enable_english_input_mode
+ ])
+diff --git a/setup/ibus-setup-pinyin.in b/setup/ibus-setup-pinyin.in
+index 2566737..314072c 100644
+--- a/setup/ibus-setup-pinyin.in
++++ b/setup/ibus-setup-pinyin.in
+@@ -26,5 +26,5 @@ export IBUS_PREFIX=@prefix@
+ export IBUS_DATAROOTDIR=@datarootdir@
+ export IBUS_LOCALEDIR=@localedir@
+ cd @prefix@/share/ibus-pinyin/setup/
+-exec python main.py $@
++exec @PYTHON@ main.py $@
+ 
+diff --git a/setup/main.py b/setup/main.py
+index fb27103..8814bf3 100644
+--- a/setup/main.py
++++ b/setup/main.py
+@@ -20,6 +20,8 @@
+ # along with this program; if not, write to the Free Software
+ # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ 
++from __future__ import print_function
++
+ import gettext
+ import locale
+ import os
+@@ -250,8 +252,8 @@ class PreferencesDialog:
+ 
+         def __correct_pinyin_toggled_cb(widget):
+             val = widget.get_active()
+-            map(lambda w: self.__builder.get_object(w[0]).set_sensitive(val),
+-                self.__correct_pinyin_widgets)
++            for w in self.__correct_pinyin_widgets:
++                self.__builder.get_object(w[0]).set_sensitive(val)
+         self.__correct_pinyin.connect("toggled", __correct_pinyin_toggled_cb)
+ 
+         # init value
+@@ -300,8 +302,8 @@ class PreferencesDialog:
+ 
+         def __fuzzy_pinyin_toggled_cb(widget):
+             val = widget.get_active()
+-            map(lambda w: self.__builder.get_object(w[0]).set_sensitive(val),
+-                self.__fuzzy_pinyin_widgets)
++            for w in self.__fuzzy_pinyin_widgets:
++                self.__builder.get_object(w[0]).set_sensitive(val)
+         self.__fuzzy_pinyin.connect("toggled", __fuzzy_pinyin_toggled_cb)
+ 
+         # init value
+@@ -404,7 +406,7 @@ class PreferencesDialog:
+         elif isinstance(val, str):
+             var = GLib.Variant.new_string(val)
+         else:
+-            print >> sys.stderr, "val(%s) is not in support type." % repr(val)
++            print("val(%s) is not in support type." % repr(val), file=sys.stderr)
+             return
+ 
+         self.__values[name] = val

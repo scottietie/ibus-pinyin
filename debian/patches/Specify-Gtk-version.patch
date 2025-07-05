@@ -1,0 +1,16 @@
+Description: Specify Gtk version
+Author: Gunnar Hjalmarsson <gunnarhj@debian.org>
+Applied-Upstream: https://github.com/ibus/ibus-pinyin/commit/61677008
+Bug-Ubuntu: https://launchpad.net/bugs/2019921
+
+--- a/setup/main.py
++++ b/setup/main.py
+@@ -27,6 +27,8 @@
+ import os
+ import sys
+ 
++from gi import require_version
++require_version ('Gtk', '3.0')
+ from gi.repository import GLib
+ from gi.repository import Gtk
+ from gi.repository import IBus

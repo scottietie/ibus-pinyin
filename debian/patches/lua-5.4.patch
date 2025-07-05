@@ -1,0 +1,19 @@
+Description: Fix lua 5.4 compatibility, due to deprecated LUA_QS macro
+See: https://polyrex.io/polyrex/dependencies/lua/-/commit/f97c64d7bf4c0f373711795d8faba0e8cd206761
+For reference.
+Author: Gianfranco Costamagna <locutusofborg@debian.org>
+Bug-Debian: https://bugs.debian.org/964680
+Forwarded: https://github.com/phuang/ibus-pinyin/pull/18
+Last-Update: 2020-07-15
+
+--- ibus-pinyin-1.5.0.orig/lua/lmyoslib.c
++++ ibus-pinyin-1.5.0/lua/lmyoslib.c
+@@ -65,7 +65,7 @@ static int getfield (lua_State *L, const
+     res = (int)lua_tointeger(L, -1);
+   else {
+     if (d < 0)
+-      return luaL_error(L, "field " LUA_QS " missing in date table", key);
++      return luaL_error(L, "field '%s' missing in date table", key);
+     res = d;
+   }
+   lua_pop(L, 1);

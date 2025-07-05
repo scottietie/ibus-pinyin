@@ -1,0 +1,20 @@
+# Patch0:
+# Fixes lua 5.2 compile
+ibus-pinyin-fixes-lua-compile.patch
+
+# Patch1:
+# Fri Nov  8 2013 Peng Wu <pwu@redhat.com> - 1.5.0-5
+# Fixes ibus: visible password entry flaw. (rhbz#1027029) (CVE-2013-4509)
+# ibus-pinyin-support-set-content-type-method.patch
+# Updated upstream patch: 97565d0 ("support setContentType method", 2014-02-19)
+ibus-pinyin-support-setContentType-method.patch
+
+# PATCH ibus-pinyin-default-full.patch qzhao@suse.com -- set Fullpinyin beyond dconf database as default.
+ibus-pinyin-default-full.patch
+
+# python3 support
+python3.patch
+lua-5.4.patch
+
+Fix-removed-python-gettext-API.patch
+Specify-Gtk-version.patch

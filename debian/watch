@@ -1,0 +1,6 @@
+version=3
+opts=filenamemangle=s#.*/archive/([\d.]+\.tar\.[gx]z)#ibus-pinyin-$1# \
+https://github.com/ibus/ibus-pinyin/releases \
+/ibus/ibus-pinyin/archive/([\d.]+)\.tar\.[gx]z debian uupdate
+#<a href="/ibus/ibus-pinyin/archive/0.8.66.2.tar.gz" rel="nofollow">
+
