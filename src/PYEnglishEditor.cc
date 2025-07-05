@@ -33,7 +33,7 @@
 
 namespace PY {
 
-#define DB_BACKUP_TIMEOUT   (60)
+#define DB_BACKUP_TIMEOUT   (600)
 
 class EnglishDatabase{
 public:

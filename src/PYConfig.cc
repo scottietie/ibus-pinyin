@@ -98,12 +98,12 @@ void
 Config::initDefaultValues (void)
 {
     m_option = PINYIN_DEFAULT_OPTION;
-    m_option_mask = PINYIN_INCOMPLETE_PINYIN | PINYIN_CORRECT_ALL;
+    m_option_mask = PINYIN_INCOMPLETE_PINYIN;
     updateContext (PyZy::InputContext::PROPERTY_CONVERSION_OPTION,
                    PyZy::Variant::fromUnsignedInt (option ()));
 
     m_orientation = IBUS_ORIENTATION_HORIZONTAL;
-    m_page_size = 9;
+    m_page_size = 10;
     m_shift_select_candidate = FALSE;
     m_minus_equal_page = TRUE;
     m_comma_period_page = TRUE;
@@ -113,7 +113,7 @@ Config::initDefaultValues (void)
     m_init_full = FALSE;
     m_double_pinyin = FALSE;
     m_init_full_punct = TRUE;
-    m_init_simp_chinese = TRUE;
+    m_init_simp_chinese = FALSE;
     m_special_phrases = TRUE;
     updateContext (PyZy::InputContext::PROPERTY_SPECIAL_PHRASE,
                    PyZy::Variant::fromBool (m_special_phrases));
@@ -181,7 +181,7 @@ Config::readDefaultValues (void)
         m_orientation = IBUS_ORIENTATION_HORIZONTAL;
         g_warn_if_reached ();
     }
-    m_page_size = read (CONFIG_PAGE_SIZE, 5);
+    m_page_size = read (CONFIG_PAGE_SIZE, 10);
     if (m_page_size > 10) {
         m_page_size = 5;
         g_warn_if_reached ();
@@ -421,8 +421,8 @@ PinyinConfig::readDefaultValues (void)
     /* init states */
     m_init_chinese = read (CONFIG_INIT_CHINESE, true);
     m_init_full = read (CONFIG_INIT_FULL, false);
-    m_init_full_punct = read (CONFIG_INIT_FULL_PUNCT, true);
-    m_init_simp_chinese = read (CONFIG_INIT_SIMP_CHINESE, true);
+    m_init_full_punct = read (CONFIG_INIT_FULL_PUNCT, false);
+    m_init_simp_chinese = read (CONFIG_INIT_SIMP_CHINESE, false);
 
     m_special_phrases = read (CONFIG_SPECIAL_PHRASES, true);
     updateContext (PyZy::InputContext::PROPERTY_SPECIAL_PHRASE,
@@ -435,7 +435,7 @@ PinyinConfig::readDefaultValues (void)
     m_auto_commit = read (CONFIG_AUTO_COMMIT, false);
 
     /* correct pinyin */
-    if (read (CONFIG_CORRECT_PINYIN, true))
+    if (read (CONFIG_CORRECT_PINYIN, false))
         m_option_mask |= PINYIN_CORRECT_ALL;
     else
         m_option_mask &= ~PINYIN_CORRECT_ALL;

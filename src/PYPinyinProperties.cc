@@ -82,7 +82,7 @@ PinyinProperties::PinyinProperties (Config & config)
 void
 PinyinProperties::toggleModeChinese (void)
 {
-    m_mode_chinese = ! m_mode_chinese;
+    m_mode_chinese = 1; //! m_mode_chinese;
     m_prop_chinese.setLabel (m_mode_chinese ? "CN" : "EN");
     m_prop_chinese.setIcon (m_mode_chinese ?
                                 PKGDATADIR"/icons/chinese.svg" :

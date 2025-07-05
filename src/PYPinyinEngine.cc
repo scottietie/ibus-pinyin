@@ -132,12 +132,6 @@ PinyinEngine::processKeyEvent (guint keyval, guint keycode, guint modifiers)
                         break;
                     m_input_mode = MODE_EXTENSION;
                     break;
-                case IBUS_v:
-                    // do not enable english mode when use double pinyin.
-                    if (PinyinConfig::instance ().doublePinyin ())
-                        break;
-                    m_input_mode = MODE_ENGLISH;
-                    break;
                 }
             }
             else {

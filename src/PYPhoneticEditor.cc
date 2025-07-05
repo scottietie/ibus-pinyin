@@ -242,16 +242,16 @@ PhoneticEditor::fillLookupTableByPage (void)
         }
 
         Text text (candidate.text);
-        switch (candidate.type) {
-        case PyZy::USER_PHRASE:
-            text.appendAttribute (IBUS_ATTR_TYPE_FOREGROUND, 0x000000ef, 0, -1);
-            break;
-        case PyZy::SPECIAL_PHRASE:
-            text.appendAttribute (IBUS_ATTR_TYPE_FOREGROUND, 0x0000ef00, 0, -1);
-            break;
-        default:
-            break;
-        }
+        // switch (candidate.type) {
+        // case PyZy::USER_PHRASE:
+        //     text.appendAttribute (IBUS_ATTR_TYPE_FOREGROUND, 0x000000ef, 0, -1);
+        //     break;
+        // case PyZy::SPECIAL_PHRASE:
+        //     text.appendAttribute (IBUS_ATTR_TYPE_FOREGROUND, 0x0000ef00, 0, -1);
+        //     break;
+        // default:
+        //     break;
+        // }
         m_lookup_table.appendCandidate (text);
     }
 

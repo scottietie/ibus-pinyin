@@ -27,6 +27,7 @@ namespace PY {
 inline gboolean
 FallbackEditor::processPunctForSimplifiedChinese (guint keyval, guint keycode, guint modifiers)
 {
+    return FALSE;
     switch (keyval) {
     case '`':
         commit ("·"); return TRUE;
@@ -97,6 +98,7 @@ FallbackEditor::processPunctForSimplifiedChinese (guint keyval, guint keycode, g
 inline gboolean
 FallbackEditor::processPunctForTraditionalChinese (guint keyval, guint keycode, guint modifiers)
 {
+    return FALSE;
     switch (keyval) {
     case '~':
         commit ("～"); return TRUE;
