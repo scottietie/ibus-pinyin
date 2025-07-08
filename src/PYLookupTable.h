@@ -31,7 +31,7 @@ class LookupTable : Object {
 public:
     LookupTable (guint page_size = 10,
                  guint cursor_pos = 0,
-                 gboolean cursor_visible = TRUE,
+                 gboolean cursor_visible = FALSE,
                  gboolean round = FALSE)
         : Object (ibus_lookup_table_new (page_size, cursor_pos, cursor_visible, round)) { }
 
