@@ -1,0 +1,10 @@
+Fix of the candidate-list in using ibus-pinyin is out of order
+
+the problem is caused by the new version of libsqlite
+
+For not be mixed up the original Ubuntu system ( lots of tool are using libsqlite as well)
+create a script as the snippet code to preload an older version of libsqlite
+check install.sh about the detailed
+
+sqlite_3.22/ is the pre-build binary of libsqlite, and verified on 20.04, 22.04
+may need to re-build in future distro

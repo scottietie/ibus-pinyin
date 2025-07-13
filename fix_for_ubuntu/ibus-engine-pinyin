@@ -1,0 +1,4 @@
+#! /bin/sh
+export LD_PRELOAD=/usr/local/lib/sqlite_3.22/libsqlite3.so.0
+
+/usr/lib/ibus/ibus-engine-pinyin.bin $@
