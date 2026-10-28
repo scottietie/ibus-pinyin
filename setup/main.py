@@ -399,9 +399,13 @@ class PreferencesDialog:
     def __get_value(self, name, defval):
         if name in self.__values:
             var = self.__values[name]
-            if isinstance(defval, type(var)):
-                return var
-        self.__set_value(name, defval)
+            if isinstance(var, GLib.Variant):
+                if isinstance(defval, bool) and var.is_of_type(GLib.VariantType("b")):
+                    return var.get_boolean()
+                if isinstance(defval, int) and var.is_of_type(GLib.VariantType("i")):
+                    return var.get_int32()
+                if isinstance(defval, str) and var.is_of_type(GLib.VariantType("s")):
+                    return var.get_string()
         return defval
 
     def __set_value(self, name, val):
